@@ -42,3 +42,48 @@ class gmail_checker:
                         print('All reviewed emails were put on seen')
             
         return self.emails
+    
+    def get_data(self, data):
+        data_id = data['id']
+        data = data['Message']
+    
+        self.commerce = data[data.find('Comercio:'):data.find('Comercio:')+30]
+        self.date = data[data.find('Fecha:'):data.find('Fecha:')+30]
+        self.card = data[data.find('VISA|'):data.find('VISA|')+24]
+        self.reference = data[data.find('Referencia:|'):data.find('Referencia:|')+23]
+        self.transaction_type = data[data.find('Tipo de Transacción:|'):data.find('Tipo de Transacción:|')+30]
+        self.transaction_type = data[data.find('Tipo de Transacción:|'):data.find('Tipo de Transacción:|')+30]
+        self.ammount = data[data.find('Monto:|'):data.find('Monto:|')+20]
+    
+        self.commerce_clean = self.commerce.split('|')
+        self.commerce_clean = self.commerce_clean[1].split('-')
+        self.commerce_clean = self.commerce_clean[0].replace(' ', '')
+    
+        self.date_clean = self.date.split('|')
+        self.date_clean = self.date_clean[1].replace(' ', '')
+    
+        self.card_clean = self.card.split('|')
+        self.card_clean = self.card_clean[1].replace(' ', '')
+    
+        self.reference_clean = self.reference.split('|')
+        self.reference_clean = self.reference_clean[1].replace(' ', '')
+    
+        self.transaction_type_clean = self.transaction_type.split('|')
+        self.transaction_type_clean = self.transaction_type_clean[1].replace(' ', '')
+    
+        self.ammount_clean = self.ammount.split('|')
+        self.ammount_clean = self.ammount_clean[1].split(' ')
+        self.ammount_clean = self.ammount_clean[2]
+            
+        self.data_clean = {
+            'ID': data_id,
+            'Reference': self.reference_clean,
+            'Date': self.date_clean,
+            'Commerce': self.commerce_clean,
+            'Transaction_type': self.transaction_type_clean,
+            'Transaction_ammount': self.ammount_clean
+        }
+            
+        return self.data_clean
+        
+    
